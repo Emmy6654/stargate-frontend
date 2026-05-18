@@ -33,3 +33,18 @@ npm run build:widget
 ```
 
 `vercel.json` contains the production build command, global security headers, hosted-checkout frame policy, and widget rewrite used by the deployment workflow.
+
+Production deploys require these GitHub secrets on `dreamgeneX/stargate-frontend`:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Production URLs should be stored as GitHub repository variables:
+
+- `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_API_URL`
+
+## License
+
+MIT

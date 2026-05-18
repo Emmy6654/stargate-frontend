@@ -1,1 +1,1 @@
-export * from '@stargate/types';
+export * from './api';

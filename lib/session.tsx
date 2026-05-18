@@ -1,6 +1,6 @@
 'use client';
 
-import type { Merchant } from '@stargate/types';
+import type { Merchant } from '@/types';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { setAccessToken } from './api';
 

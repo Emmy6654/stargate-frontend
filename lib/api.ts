@@ -1,4 +1,4 @@
-import type { AuthTokens, CreateInvoiceDto, InvoiceListResponse, LoginDto, PublicInvoice, RegisterDto } from '@stargate/types';
+import type { AuthTokens, CreateInvoiceDto, InvoiceListResponse, LoginDto, PublicInvoice, RegisterDto } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 let accessToken: string | null = null;
