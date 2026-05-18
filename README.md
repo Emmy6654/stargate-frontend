@@ -1,8 +1,8 @@
 # Stargate Frontend
 
-Next.js merchant dashboard, public payment pages, wallet integration, webhook settings, and embeddable widget.
+Next.js marketing site, merchant dashboard, public payment pages, wallet integration, webhook settings, and embeddable widget.
 
-The dashboard follows the Stargate frontend design prompt kit: B2B navigation, transactions, payment links, wallets, webhooks, team controls, developer docs, and a hosted checkout flow.
+The frontend follows the Stargate design prompt kit: dark fintech hero, B2B navigation, transactions, payment links, wallets, webhooks, team controls, developer docs, hosted checkout, and the widget SDK.
 
 ## Local Development
 
@@ -23,3 +23,13 @@ npm run build:widget
 ```
 
 The from-scratch product prompt kit lives at `../docs/stargate-product-build-prompts.md`.
+
+## Production
+
+```sh
+cp .env.production.example .env.production
+npm run build
+npm run build:widget
+```
+
+`vercel.json` contains the production build command, global security headers, hosted-checkout frame policy, and widget rewrite used by the deployment workflow.
