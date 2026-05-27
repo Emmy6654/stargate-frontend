@@ -1,9 +1,21 @@
 import { ButtonHTMLAttributes } from 'react';
 
-export function Button({ className = '', ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'outline' | 'ghost';
+}
+
+export function Button({ className = '', variant = 'default', ...props }: ButtonProps) {
+  const baseStyles = 'inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60';
+  
+  const variants = {
+    default: 'bg-violet text-white hover:bg-ocean',
+    outline: 'border border-slate-300 text-slate-700 bg-white hover:bg-slate-50',
+    ghost: 'text-slate-700 hover:bg-slate-100',
+  };
+
   return (
     <button
-      className={`inline-flex h-10 items-center justify-center gap-2 rounded-md bg-violet px-4 text-sm font-medium text-white transition hover:bg-ocean disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${className}`}
       {...props}
     />
   );

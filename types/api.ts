@@ -67,3 +67,37 @@ export interface PublicInvoice {
   muxed_address: string;
   expires_at: string;
 }
+
+export type KYCDocumentType = 'passport' | 'drivers_license' | 'national_id' | 'business_license';
+
+export type KYCSubmissionStatus = 'draft' | 'submitted' | 'approved' | 'rejected' | 'pending_review';
+
+export interface KYCDocument {
+  id: string;
+  document_type: KYCDocumentType;
+  file_name: string;
+  file_size: number;
+  file_url?: string;
+  uploaded_at: string;
+}
+
+export interface KYCSubmission {
+  id: string;
+  merchant_id: string;
+  status: KYCSubmissionStatus;
+  documents: KYCDocument[];
+  submitted_at?: string;
+  reviewed_at?: string;
+  rejection_reason?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UploadDocumentDto {
+  document_type: KYCDocumentType;
+  file: File;
+}
+
+export interface SubmitKYCDto {
+  document_ids: string[];
+}

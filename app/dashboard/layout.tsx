@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart3, CreditCard, FileText, KeyRound, LogOut, Search, Settings, ShieldCheck, Users, Wallet, Webhook } from 'lucide-react';
+import { BarChart3, CreditCard, FileText, KeyRound, LogOut, Search, Settings, ShieldCheck, Users, Wallet, Webhook, FileCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
@@ -17,6 +17,7 @@ const nav = [
   { href: '/dashboard/wallets', label: 'Wallets', icon: Wallet },
   { href: '/dashboard/webhooks', label: 'Webhooks', icon: Webhook },
   { href: '/dashboard/team', label: 'Team', icon: Users },
+  { href: '/dashboard/kyc', label: 'KYC Verification', icon: FileCheck },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
   { href: '/dashboard/developers', label: 'Developers', icon: KeyRound },
 ] as const;
