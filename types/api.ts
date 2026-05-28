@@ -146,3 +146,63 @@ export interface UpdateTeamMemberDto {
   role?: TeamMemberRole;
   status?: TeamMemberStatus;
 }
+
+export interface ApiKey {
+  id: string;
+  merchant_id: string;
+  name: string;
+  key: string;
+  scopes: string[];
+  last_used_at?: string;
+  created_at: string;
+  revoked_at?: string;
+}
+
+export interface ApiKeyListResponse {
+  page: number;
+  limit: number;
+  total: number;
+  items: ApiKey[];
+}
+
+export interface CreateApiKeyDto {
+  name: string;
+  scopes: string[];
+}
+
+export interface UpdateApiKeyDto {
+  name?: string;
+}
+
+export interface WebhookDelivery {
+  id: string;
+  webhook_id: string;
+  event: string;
+  status: 'pending' | 'success' | 'failed';
+  response_status?: number;
+  response_body?: string;
+  latency_ms: number;
+  created_at: string;
+}
+
+export interface WebhookDeliveryListResponse {
+  page: number;
+  limit: number;
+  total: number;
+  items: WebhookDelivery[];
+}
+
+export interface InvoiceTimeline {
+  id: string;
+  invoice_id: string;
+  event_type: 'created' | 'viewed' | 'paid' | 'settled' | 'expired' | 'cancelled';
+  description: string;
+  created_at: string;
+}
+
+export interface MerchantBalance {
+  usdc: string;
+  eurc: string;
+  xlm: string;
+  updated_at: string;
+}
