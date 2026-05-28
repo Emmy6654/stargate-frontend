@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { CommandPalette } from '@/components/dashboard/CommandPalette';
 import { Input } from '@/components/ui/Input';
 import { useSession } from '@/lib/session';
+import { SessionTimeoutModal } from '@/components/auth/SessionTimeoutModal';
 
 const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -28,6 +29,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const session = useSession();
   return (
     <div className="grid min-h-screen grid-cols-[260px_1fr] bg-surface">
+      <SessionTimeoutModal />
       <CommandPalette />
       <aside className="flex min-h-screen flex-col border-r border-slate-200 bg-white p-4">
         <div className="mb-6 flex items-center justify-between">
