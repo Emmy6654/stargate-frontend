@@ -22,7 +22,7 @@ export default function PaymentLinksPage() {
           <h1 className="text-2xl font-semibold text-ink">Payment Links</h1>
           <p className="text-sm text-slate-500">Share hosted checkout links backed by Stellar USDC invoices.</p>
         </div>
-        <Link href="/dashboard/invoices/new">
+        <Link href="/dashboard/payment-links/new">
           <Button><Plus size={16} /> New link</Button>
         </Link>
       </div>
