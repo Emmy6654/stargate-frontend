@@ -94,4 +94,18 @@ export const api = {
       }).then(res => res.json()),
     timeline: (id: string) => request<any[]>(`/disputes/${id}/timeline`),
   },
+  apiKeys: {
+    list: () => request<any[]>('/api-keys'),
+    create: (dto: any) => request<any>('/api-keys', { method: 'POST', body: JSON.stringify(dto) }),
+    ipAllowlist: {
+      list: (keyId: string) => request<any[]>(`/api-keys/${keyId}/ip-allowlist`),
+      add: (keyId: string, cidr: string, description?: string) =>
+        request<any>(`/api-keys/${keyId}/ip-allowlist`, {
+          method: 'POST',
+          body: JSON.stringify({ cidr, description }),
+        }),
+      remove: (keyId: string, id: string) =>
+        request<any>(`/api-keys/${keyId}/ip-allowlist/${id}`, { method: 'DELETE' }),
+    },
+  },
 };
