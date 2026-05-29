@@ -1,9 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { RefundModal } from '@/components/invoices/RefundModal';
+import { api } from '@/lib/api';
+
+export function InvoiceDetail({ invoice, onCancel, onRefund }: { invoice: any; onCancel(): void; onRefund?(): void }) {
+  const [refundOpen, setRefundOpen] = useState(false);
+  const [refundStatus, setRefundStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
+
+  const handleRefund = async () => {
+    try {
+      setRefundStatus('pending');
+      await api.invoices.refund(invoice.id);
+      setRefundStatus('success');
+      onRefund?.();
+    } catch (err) {
+      setRefundStatus('error');
+      throw err;
+    }
+  };
 
 function Skeleton({ className }: { className?: string }) {
   return <div className={`animate-pulse rounded bg-slate-200 ${className ?? ''}`} />;
@@ -43,6 +62,8 @@ export function InvoiceDetail({ invoice, onCancel }: { invoice: any; onCancel():
       <section className="space-y-4">
         <h1 className="text-2xl font-semibold text-ink">Invoice {invoice.id}</h1>
         <Badge status={invoice.status} />
+        {refundStatus === 'success' && <p className="text-sm text-green-600">Refund initiated successfully</p>}
+        {refundStatus === 'error' && <p className="text-sm text-red-600">Refund failed</p>}
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div><dt className="text-slate-500">Amount</dt><dd>{invoice.amount_usdc} USDC</dd></div>
           <div><dt className="text-slate-500">Buyer pays</dt><dd>{invoice.gross_usdc} USDC</dd></div>
@@ -51,6 +72,7 @@ export function InvoiceDetail({ invoice, onCancel }: { invoice: any; onCancel():
         </dl>
         <div className="flex gap-2">
           {invoice.status === 'pending' && <Button onClick={onCancel}>Cancel invoice</Button>}
+          {invoice.status === 'paid' && <Button onClick={() => setRefundOpen(true)}>Refund</Button>}
           {invoice.paid_at && invoice.tx_hash && (
             <Button variant="secondary" asChild>
               <a href={getSorobanExplorerUrl(invoice.tx_hash)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
@@ -64,6 +86,13 @@ export function InvoiceDetail({ invoice, onCancel }: { invoice: any; onCancel():
         <QRCodeSVG value={invoice.payment_url} size={240} className="mx-auto max-w-full" />
         <Button className="mt-4 w-full" onClick={() => navigator.clipboard.writeText(invoice.payment_url)}>Copy payment URL</Button>
       </aside>
+      <RefundModal
+        open={refundOpen}
+        onClose={() => setRefundOpen(false)}
+        invoiceId={invoice.id}
+        amount={invoice.amount_usdc}
+        onConfirm={handleRefund}
+      />
     </div>
   );
 }

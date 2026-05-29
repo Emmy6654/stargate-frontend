@@ -48,6 +48,7 @@ export const api = {
     create: (dto: CreateInvoiceDto) => request<any>('/invoices', { method: 'POST', body: JSON.stringify(dto) }),
     get: (id: string) => request<any>(`/invoices/${id}`),
     cancel: (id: string) => request<any>(`/invoices/${id}/cancel`, { method: 'POST' }),
+    refund: (id: string) => request<any>(`/invoices/${id}/refund`, { method: 'POST' }),
     public: (id: string) => request<PublicInvoice>(`/invoices/public/${id}`),
   },
   payments: {
@@ -94,6 +95,18 @@ export const api = {
     timeline: (id: string) => request<any[]>(`/disputes/${id}/timeline`),
   },
   apiKeys: {
+    list: () => request<any[]>('/api-keys'),
+    create: (dto: any) => request<any>('/api-keys', { method: 'POST', body: JSON.stringify(dto) }),
+    ipAllowlist: {
+      list: (keyId: string) => request<any[]>(`/api-keys/${keyId}/ip-allowlist`),
+      add: (keyId: string, cidr: string, description?: string) =>
+        request<any>(`/api-keys/${keyId}/ip-allowlist`, {
+          method: 'POST',
+          body: JSON.stringify({ cidr, description }),
+        }),
+      remove: (keyId: string, id: string) =>
+        request<any>(`/api-keys/${keyId}/ip-allowlist/${id}`, { method: 'DELETE' }),
+    },
     list: (query = '') => request<any>(`/api-keys${query}`),
     create: (dto: any) => request<any>('/api-keys', { method: 'POST', body: JSON.stringify(dto) }),
     update: (id: string, dto: any) => request<any>(`/api-keys/${id}`, { method: 'PATCH', body: JSON.stringify(dto) }),

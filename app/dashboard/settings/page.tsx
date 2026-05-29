@@ -6,12 +6,26 @@ import { TwoFactorManagement } from '@/components/auth/TwoFactorManagement';
 import { TOTPSetupGuide } from '@/components/auth/TOTPSetupGuide';
 import { CustomDomainConfig } from '@/components/settings/CustomDomainConfig';
 import { StellarAddressQR } from '@/components/settings/StellarAddressQR';
+import { IPAllowlist } from '@/components/settings/IPAllowlist';
 import { api } from '@/lib/api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 
 export default function SettingsPage() {
   const [showTOTPSetup, setShowTOTPSetup] = useState(false);
   const [stellarAddress, setStellarAddress] = useState('');
+  const [selectedApiKey, setSelectedApiKey] = useState<string | null>(null);
+  const { data: apiKeys } = useSWR('api-keys', () => api.apiKeys.list());
+  const { data: allowlist, mutate: mutateAllowlist } = useSWR(
+    selectedApiKey ? ['ip-allowlist', selectedApiKey] : null,
+    () => selectedApiKey ? api.apiKeys.ipAllowlist.list(selectedApiKey) : Promise.resolve([])
+  );
+
+  useEffect(() => {
+    if (apiKeys?.length && !selectedApiKey) {
+      setSelectedApiKey(apiKeys[0].id);
+    }
+  }, [apiKeys, selectedApiKey]);
 
   async function save(formData: FormData) {
     await api.merchants.update({
@@ -55,6 +69,38 @@ export default function SettingsPage() {
           <h2 className="text-lg font-semibold text-ink mb-4">API Key</h2>
           <Button>Generate API key</Button>
         </div>
+
+        {apiKeys && apiKeys.length > 0 && (
+          <div>
+            <h2 className="text-lg font-semibold text-ink mb-4">IP Allowlist</h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-slate-700 mb-2">Select API Key</label>
+              <select
+                value={selectedApiKey || ''}
+                onChange={(e) => setSelectedApiKey(e.target.value)}
+                className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm w-full"
+              >
+                {apiKeys.map((key: any) => (
+                  <option key={key.id} value={key.id}>
+                    {key.name || key.id}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {selectedApiKey && (
+              <IPAllowlist
+                apiKeyId={selectedApiKey}
+                entries={allowlist || []}
+                onAdd={(cidr, description) =>
+                  api.apiKeys.ipAllowlist.add(selectedApiKey, cidr, description).then(() => mutateAllowlist())
+                }
+                onRemove={(id) =>
+                  api.apiKeys.ipAllowlist.remove(selectedApiKey, id).then(() => mutateAllowlist())
+                }
+              />
+            )}
+          </div>
+        )}
 
         <div>
           <h2 className="text-lg font-semibold text-ink mb-4">Checkout Domain</h2>
