@@ -107,5 +107,19 @@ export const api = {
       remove: (keyId: string, id: string) =>
         request<any>(`/api-keys/${keyId}/ip-allowlist/${id}`, { method: 'DELETE' }),
     },
+    list: (query = '') => request<any>(`/api-keys${query}`),
+    create: (dto: any) => request<any>('/api-keys', { method: 'POST', body: JSON.stringify(dto) }),
+    update: (id: string, dto: any) => request<any>(`/api-keys/${id}`, { method: 'PATCH', body: JSON.stringify(dto) }),
+    revoke: (id: string) => request<any>(`/api-keys/${id}/revoke`, { method: 'POST' }),
+  },
+  webhookDeliveries: {
+    list: (webhookId: string, query = '') => request<any>(`/webhooks/${webhookId}/deliveries${query}`),
+    replay: (deliveryId: string) => request<any>(`/webhook-deliveries/${deliveryId}/replay`, { method: 'POST' }),
+  },
+  invoiceTimeline: {
+    get: (invoiceId: string) => request<any[]>(`/invoices/${invoiceId}/timeline`),
+  },
+  balances: {
+    get: () => request<any>('/balances'),
   },
 };
