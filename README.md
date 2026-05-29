@@ -37,6 +37,42 @@ Albedo works in-browser without an extension. Select **Albedo** on the wallet se
 - Set `NEXT_PUBLIC_STELLAR_NETWORK=testnet` in `.env.local` to ensure transactions are submitted to the test network.
 - Use the [Stellar Expert testnet explorer](https://stellar.expert/explorer/testnet) to inspect transactions.
 
+## Architecture
+
+```mermaid
+graph TB
+    subgraph Pages["Next.js Pages"]
+        Home["/ - Marketing Site"]
+        Auth["/(auth) - Login/Register"]
+        Pay["pay/[id] - Payment Page"]
+        Dashboard["dashboard/* - Merchant Dashboard"]
+    end
+
+    subgraph Components["Shared Components"]
+        UI["UI Components<br/>Button, Modal, Card, Input"]
+        Payment["Payment Components<br/>PaymentWidget, WalletSelector"]
+        Dashboard_Comp["Dashboard Components<br/>StatsCards, Charts, Tables"]
+        Auth_Comp["Auth Components<br/>TwoFactorManagement, SessionTimeout"]
+    end
+
+    subgraph Integrations["External Integrations"]
+        Stellar["Stellar Network<br/>Horizon API"]
+        Wallets["Wallet SDKs<br/>Freighter, Albedo"]
+        API["Backend API<br/>REST Endpoints"]
+    end
+
+    subgraph Utils["Utilities & Hooks"]
+        Lib["lib/<br/>api.ts, stellar.ts, sse.ts"]
+        Hooks["hooks/<br/>useWallet, useInvoices, useTeam"]
+    end
+
+    Pages -->|uses| Components
+    Components -->|calls| Utils
+    Utils -->|connects to| Integrations
+    Dashboard -->|manages| Payment
+    Auth -->|validates| Auth_Comp
+```
+
 ## Verification
 
 ```sh
