@@ -122,8 +122,9 @@ The frontend application is configured via the following environment variables:
 
 For detailed integration and styling guides, refer to the following documentation:
 
-- [Widget SDK & Event Schema](file:///Users/admin/.pg/stellar-W5/stargate-frontend/docs/widget-sdk.md) — Event schemas (`STARGATE_LOADED`, `STARGATE_PAID`, `STARGATE_ERROR`), `postMessage` details, and embedding code.
-- [Theming & Branding Customisation Guide](file:///Users/admin/.pg/stellar-W5/stargate-frontend/docs/theming-and-branding.md) — Complete walkthrough on how to override CSS variables, customize brand colors, support dark mode, and customize fonts for the hosted checkout page.
+- [Widget SDK & Event Schema](docs/widget-sdk.md) — Event schemas (`STARGATE_LOADED`, `STARGATE_PAID`, `STARGATE_ERROR`), `postMessage` details, and embedding code.
+- [Theming & Branding Customisation Guide](docs/theming-and-branding.md) — Complete walkthrough on how to override CSS variables, customize brand colors, support dark mode, and customize fonts for the hosted checkout page.
+- [i18n Contribution Guide](docs/i18n-contribution-guide.md) — Process for adding new languages to the hosted checkout page using next-intl.
 
 ## License
 
