@@ -2,6 +2,8 @@
 
 import { AlertCircle, BarChart3, CreditCard, FileText, KeyRound, LogOut, Search, Settings, ShieldCheck, Users, Wallet, Webhook } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ApiErrorBoundary } from '@/components/dashboard/ApiErrorBoundary';
 import { usePathname, useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -66,7 +68,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <LogOut size={16} /> Logout
           </Button>
         </header>
-        <main className="p-6">{children}</main>
+        <main className="p-6"><ApiErrorBoundary>{children}</ApiErrorBoundary></main>
       </div>
     </div>
   );
