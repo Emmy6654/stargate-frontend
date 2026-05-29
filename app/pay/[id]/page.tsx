@@ -1,9 +1,10 @@
-'use client';
+import type { Metadata } from 'next';
+import { PayPageClient } from './_client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { PaymentWidget } from '@/components/payment/PaymentWidget';
-import { useInvoiceStatus } from '@/hooks/useInvoiceStatus';
+export const metadata: Metadata = {
+  title: 'Pay – Stargate',
+  description: 'Complete your USDC payment on the Stellar network.',
+};
 
 export default function PayPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -28,4 +29,5 @@ export default function PayPage({ params }: { params: { id: string } }) {
       <PaymentWidget invoiceId={params.id} />
     </main>
   );
+  return <PayPageClient id={params.id} />;
 }
