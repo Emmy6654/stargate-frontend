@@ -4,6 +4,33 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 
+function Skeleton({ className }: { className?: string }) {
+  return <div className={`animate-pulse rounded bg-slate-200 ${className ?? ''}`} />;
+}
+
+export function InvoiceDetailSkeleton() {
+  return (
+    <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
+      <section className="space-y-4">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-6 w-20" />
+        <dl className="grid grid-cols-2 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="space-y-1">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+          ))}
+        </dl>
+      </section>
+      <aside className="rounded-md border border-slate-200 bg-white p-4 space-y-4">
+        <Skeleton className="mx-auto h-60 w-60" />
+        <Skeleton className="h-10 w-full" />
+      </aside>
+    </div>
+  );
+}
+
 export function InvoiceDetail({ invoice, onCancel }: { invoice: any; onCancel(): void }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
