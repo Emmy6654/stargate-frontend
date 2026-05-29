@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
+import { CopyField } from '@/components/ui/CopyField';
 import { Input } from '@/components/ui/Input';
 import { TwoFactorManagement } from '@/components/auth/TwoFactorManagement';
 import { TOTPSetupGuide } from '@/components/auth/TOTPSetupGuide';
@@ -14,6 +15,7 @@ import useSWR from 'swr';
 export default function SettingsPage() {
   const [showTOTPSetup, setShowTOTPSetup] = useState(false);
   const [stellarAddress, setStellarAddress] = useState('');
+  const [apiKey, setApiKey] = useState<string | null>(null);
   const [selectedApiKey, setSelectedApiKey] = useState<string | null>(null);
   const { data: apiKeys } = useSWR('api-keys', () => api.apiKeys.list());
   const { data: allowlist, mutate: mutateAllowlist } = useSWR(
@@ -37,6 +39,11 @@ export default function SettingsPage() {
     setStellarAddress(formData.get('stellar_address') as string);
   }
 
+  async function generateApiKey() {
+    const result = await (api as any).developers?.generateKey?.() ?? null;
+    if (result?.key) setApiKey(result.key);
+  }
+
   return (
     <div className="max-w-2xl space-y-8">
       <div>
@@ -58,8 +65,9 @@ export default function SettingsPage() {
           </form>
 
           {stellarAddress && (
-            <div className="mt-6">
-              <h3 className="text-sm font-semibold text-ink mb-3">Stellar Receiving Address QR</h3>
+            <div className="mt-6 space-y-3">
+              <h3 className="text-sm font-semibold text-ink">Stellar Receiving Address QR</h3>
+              <CopyField value={stellarAddress} label="Stellar address" />
               <StellarAddressQR address={stellarAddress} label="Scan to send USDC to this address" />
             </div>
           )}
@@ -67,7 +75,16 @@ export default function SettingsPage() {
 
         <div>
           <h2 className="text-lg font-semibold text-ink mb-4">API Key</h2>
-          <Button>Generate API key</Button>
+          {apiKey ? (
+            <div className="space-y-2">
+              <p className="text-xs text-slate-500">
+                Copy your key now — it will not be shown again.
+              </p>
+              <CopyField value={apiKey} label="Secret key" masked />
+            </div>
+          ) : (
+            <Button onClick={generateApiKey}>Generate API key</Button>
+          )}
         </div>
 
         {apiKeys && apiKeys.length > 0 && (
