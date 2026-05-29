@@ -1,17 +1,22 @@
 'use client';
 
+import { useState } from 'react';
 import useSWR from 'swr';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import { WebhookDeliveryLog } from '@/components/dashboard/WebhookDeliveryLog';
 import { api } from '@/lib/api';
 
 export default function WebhooksPage() {
   const { data, mutate } = useSWR('webhooks', api.webhooks.list);
+  const [selectedWebhook, setSelectedWebhook] = useState<string | null>(null);
+
   async function create(formData: FormData) {
     await api.webhooks.create({ url: formData.get('url'), events: ['invoice.paid', 'invoice.expired'] });
     mutate();
   }
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -24,21 +29,23 @@ export default function WebhooksPage() {
         <Input name="url" placeholder="https://example.com/stargate" />
         <Button>Register</Button>
       </form>
-      <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="rounded-md border border-slate-200 bg-white">
-        {(data ?? []).map((webhook: any) => (
-          <div key={webhook.id} className="flex items-center justify-between border-b border-slate-100 p-4 text-sm">
-            <div>
-              <div className="font-medium text-ink">{webhook.url}</div>
-              <div className="mt-1 text-xs text-slate-500">{webhook.events?.join(', ')}</div>
+          {(data ?? []).map((webhook: any) => (
+            <div key={webhook.id} className="flex items-center justify-between border-b border-slate-100 p-4 text-sm">
+              <div>
+                <div className="font-medium text-ink">{webhook.url}</div>
+                <div className="mt-1 text-xs text-slate-500">{webhook.events?.join(', ')}</div>
+              </div>
+              <div className="flex gap-2">
+                <Button className="bg-white text-ink ring-1 ring-slate-300" onClick={() => setSelectedWebhook(selectedWebhook === webhook.id ? null : webhook.id)}>
+                  {selectedWebhook === webhook.id ? 'Hide' : 'Logs'}
+                </Button>
+                <Button className="bg-red-700" onClick={async () => { await api.webhooks.remove(webhook.id); mutate(); }}>Delete</Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button className="bg-white text-ink ring-1 ring-slate-300" onClick={() => api.webhooks.deliveries(webhook.id)}>Deliveries</Button>
-              <Button className="bg-red-700" onClick={async () => { await api.webhooks.remove(webhook.id); mutate(); }}>Delete</Button>
-            </div>
-          </div>
-        ))}
-        {!(data ?? []).length && <div className="p-6 text-sm text-slate-500">No webhook endpoints yet.</div>}
+          ))}
+          {!(data ?? []).length && <div className="p-6 text-sm text-slate-500">No webhook endpoints yet.</div>}
         </div>
         <Card className="space-y-3">
           <h2 className="font-semibold text-ink">Event simulator</h2>
@@ -52,6 +59,7 @@ export default function WebhooksPage() {
           <Button className="w-full">Send test event</Button>
         </Card>
       </div>
+      {selectedWebhook && <WebhookDeliveryLog webhookId={selectedWebhook} />}
     </div>
   );
 }
