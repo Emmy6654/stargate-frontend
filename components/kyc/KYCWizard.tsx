@@ -15,6 +15,9 @@ const DOCUMENT_TYPES: { value: KYCDocumentType; label: string; description: stri
 
 type Step = 'type' | 'upload' | 'review' | 'success';
 
+const STEP_ORDER: Step[] = ['type', 'upload', 'review', 'success'];
+const stepIndex = (s: Step) => STEP_ORDER.indexOf(s);
+
 interface UploadedDoc {
   file: File;
   documentType: KYCDocumentType;
@@ -109,12 +112,12 @@ export function KYCWizard({ submission }: { submission?: KYCSubmission }) {
           <div key={s} className="flex items-center">
             <div
               className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold transition ${
-                step === s ? 'bg-violet text-white' : step > s ? 'bg-mint text-white' : 'bg-slate-200 text-slate-600'
+                step === s ? 'bg-violet text-white' : stepIndex(step) > stepIndex(s) ? 'bg-mint text-white' : 'bg-slate-200 text-slate-600'
               }`}
             >
               {idx + 1}
             </div>
-            {idx < 2 && <div className={`h-1 w-8 mx-1 transition ${step > s ? 'bg-mint' : 'bg-slate-200'}`} />}
+            {idx < 2 && <div className={`h-1 w-8 mx-1 transition ${stepIndex(step) > stepIndex(s) ? 'bg-mint' : 'bg-slate-200'}`} />}
           </div>
         ))}
       </div>
