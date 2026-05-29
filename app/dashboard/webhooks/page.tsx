@@ -3,11 +3,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useState } from 'react';
 import useSWR from 'swr';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { CopyField } from '@/components/ui/CopyField';
 import { Input } from '@/components/ui/Input';
+import { WebhookDeliveryLog } from '@/components/dashboard/WebhookDeliveryLog';
 import { api } from '@/lib/api';
 
 const AVAILABLE_EVENTS = [
@@ -50,6 +52,10 @@ export default function WebhooksPage() {
       secret: data.secret || undefined,
       events: data.events,
     });
+  const [selectedWebhook, setSelectedWebhook] = useState<string | null>(null);
+
+  async function create(formData: FormData) {
+    await api.webhooks.create({ url: formData.get('url'), events: ['invoice.paid', 'invoice.expired'] });
     mutate();
     // Only reset after a successful submission
     reset();
@@ -132,6 +138,18 @@ export default function WebhooksPage() {
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button className="bg-white text-ink ring-1 ring-slate-300" onClick={() => api.webhooks.deliveries(webhook.id)}>Deliveries</Button>
+      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+        <div className="rounded-md border border-slate-200 bg-white">
+          {(data ?? []).map((webhook: any) => (
+            <div key={webhook.id} className="flex items-center justify-between border-b border-slate-100 p-4 text-sm">
+              <div>
+                <div className="font-medium text-ink">{webhook.url}</div>
+                <div className="mt-1 text-xs text-slate-500">{webhook.events?.join(', ')}</div>
+              </div>
+              <div className="flex gap-2">
+                <Button className="bg-white text-ink ring-1 ring-slate-300" onClick={() => setSelectedWebhook(selectedWebhook === webhook.id ? null : webhook.id)}>
+                  {selectedWebhook === webhook.id ? 'Hide' : 'Logs'}
+                </Button>
                 <Button className="bg-red-700" onClick={async () => { await api.webhooks.remove(webhook.id); mutate(); }}>Delete</Button>
               </div>
             </div>
@@ -151,6 +169,7 @@ export default function WebhooksPage() {
           <Button className="w-full">Send test event</Button>
         </Card>
       </div>
+      {selectedWebhook && <WebhookDeliveryLog webhookId={selectedWebhook} />}
     </div>
   );
 }

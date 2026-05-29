@@ -4,6 +4,7 @@ import { CopyButton } from '@/components/ui/CopyButton';
 import { CopyField } from '@/components/ui/CopyField';
 import { RateLimitIndicator } from '@/components/developers/RateLimitIndicator';
 import { useSession } from '@/lib/session';
+import Link from 'next/link';
 
 export default function DevelopersPage() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://your-domain.com';
@@ -108,6 +109,16 @@ crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));`;
           <CopyButton value={verify} label="Copy verification snippet" />
         </div>
         <pre className="overflow-auto rounded bg-slate-100 p-3 text-sm">{verify}</pre>
+      </section>
+
+      <section className="rounded-md border border-slate-200 bg-white p-4">
+        <h2 className="mb-3 text-lg font-semibold">Widget SDK</h2>
+        <p className="text-sm text-slate-600 mb-3">
+          View the complete version history, breaking changes, and migration guides.
+        </p>
+        <Link href="/dashboard/developers/widget-changelog" className="inline-flex items-center gap-2 text-violet hover:text-ocean font-medium text-sm">
+          View Widget SDK Changelog →
+        </Link>
       </section>
 
       <section className="rounded-md border border-slate-200 bg-white p-4">
