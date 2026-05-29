@@ -95,16 +95,86 @@ npm run build:widget
 
 `vercel.json` contains the production build command, global security headers, hosted-checkout frame policy, and widget rewrite used by the deployment workflow.
 
-Production deploys require these GitHub secrets on `dreamgeneX/stargate-frontend`:
+### GitHub Secrets (Required for Vercel Deployment)
 
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
+The following GitHub secrets must be configured on the `dreamgeneX/stargate-frontend` repository for production deployments to work:
 
-Production URLs should be stored as GitHub repository variables:
+| Secret | Type | Description |
+| :--- | :--- | :--- |
+| `VERCEL_TOKEN` | `string` | Authentication token for Vercel API. Generate from [Vercel Account Settings](https://vercel.com/account/tokens). |
+| `VERCEL_ORG_ID` | `string` | Organization ID from Vercel. Found in Vercel dashboard under Settings → General. |
+| `VERCEL_PROJECT_ID` | `string` | Project ID from Vercel. Found in Vercel dashboard under Settings → General. |
 
-- `NEXT_PUBLIC_APP_URL`
-- `NEXT_PUBLIC_API_URL`
+**How to set GitHub secrets:**
+1. Go to repository Settings → Secrets and variables → Actions
+2. Click "New repository secret"
+3. Enter the secret name and value
+4. Click "Add secret"
+
+### GitHub Repository Variables (Required for Environment Configuration)
+
+The following GitHub repository variables must be configured for production environment setup:
+
+| Variable | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `NEXT_PUBLIC_APP_URL` | `string` | `http://localhost:3000` | Public-facing domain URL of the frontend console. Used to generate webhook endpoints, copyable integration scripts, and SDK configuration details. Example: `https://app.stargate.example.com` |
+| `NEXT_PUBLIC_API_URL` | `string` | `http://localhost:3001` | Base API URL for frontend interactions. Used for general API calls and payment confirmation streams. Example: `https://api.stargate.example.com` |
+
+**How to set GitHub repository variables:**
+1. Go to repository Settings → Secrets and variables → Variables
+2. Click "New repository variable"
+3. Enter the variable name and value
+4. Click "Add variable"
+
+### Deployment Workflow
+
+The production deployment workflow (`.github/workflows/deploy-production.yml`) uses these secrets and variables to:
+1. Authenticate with Vercel using `VERCEL_TOKEN`
+2. Deploy to the correct Vercel organization and project using `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`
+3. Configure environment variables for the deployed application using `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_API_URL`
+
+### Environment Variables for Production Build
+
+When deploying to production, ensure the following environment variables are set:
+
+```bash
+# Required
+NEXT_PUBLIC_APP_URL=https://app.stargate.example.com
+NEXT_PUBLIC_API_URL=https://api.stargate.example.com
+NEXT_PUBLIC_STELLAR_NETWORK=mainnet  # Use 'mainnet' for production
+
+# Optional (defaults provided)
+# NEXT_PUBLIC_STELLAR_NETWORK defaults to 'testnet' if not set
+```
+
+### Verification Before Deployment
+
+Before deploying to production, verify:
+
+1. All GitHub secrets are configured correctly
+2. All GitHub repository variables are set
+3. Environment variables are correct for your production environment
+4. Run the verification commands:
+   ```bash
+   npm run typecheck
+   npm run lint
+   npm run build
+   npm run build:widget
+   ```
+
+### Troubleshooting Deployment Issues
+
+**Issue: "Vercel authentication failed"**
+- Verify `VERCEL_TOKEN` is valid and not expired
+- Regenerate the token from Vercel Account Settings if needed
+
+**Issue: "Project not found"**
+- Verify `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` are correct
+- Ensure the project exists in the specified Vercel organization
+
+**Issue: "Environment variables not set"**
+- Verify `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_API_URL` are configured as GitHub repository variables
+- Check that the deployment workflow has access to these variables
 
 ## Environment Variables
 
