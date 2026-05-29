@@ -1,5 +1,8 @@
 'use client';
 
+import { useState } from 'react';
+import { ClipboardList } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { CopyField } from '@/components/ui/CopyField';
 import { Input } from '@/components/ui/Input';
@@ -7,6 +10,8 @@ import { TwoFactorManagement } from '@/components/auth/TwoFactorManagement';
 import { TOTPSetupGuide } from '@/components/auth/TOTPSetupGuide';
 import { CustomDomainConfig } from '@/components/settings/CustomDomainConfig';
 import { StellarAddressQR } from '@/components/settings/StellarAddressQR';
+import { BrandingSettings } from '@/components/settings/BrandingSettings';
+import { api } from '@/lib/api';
 import { IPAllowlist } from '@/components/settings/IPAllowlist';
 import { api } from '@/lib/api';
 import { useState, useEffect } from 'react';
@@ -46,8 +51,14 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-2xl space-y-8">
-      <div>
+      <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-ink">Settings</h1>
+        <Link
+          href="/dashboard/settings/audit-log"
+          className="inline-flex h-9 items-center gap-2 rounded-md bg-white px-3 text-sm font-medium text-ink ring-1 ring-slate-300 hover:bg-slate-50"
+        >
+          <ClipboardList size={16} /> Audit Log
+        </Link>
       </div>
 
       <section className="space-y-6">
@@ -122,6 +133,12 @@ export default function SettingsPage() {
         <div>
           <h2 className="text-lg font-semibold text-ink mb-4">Checkout Domain</h2>
           <CustomDomainConfig />
+        </div>
+
+        {/* Payment Page Branding */}
+        <div className="border-t border-slate-200 pt-6">
+          <h2 className="text-lg font-semibold text-ink mb-4">Payment Page Branding</h2>
+          <BrandingSettings />
         </div>
 
         <div className="border-t border-slate-200 pt-6">

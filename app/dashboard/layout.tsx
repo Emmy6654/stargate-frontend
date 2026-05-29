@@ -1,5 +1,6 @@
 'use client';
 
+import { AlertCircle, BarChart3, ClipboardList, CreditCard, FileText, KeyRound, LogOut, Search, Settings, ShieldCheck, Users, Wallet, Webhook } from 'lucide-react';
 import { AlertCircle, BarChart3, CreditCard, FileText, KeyRound, LogOut, Search, Send, Settings, ShieldCheck, Users, Wallet, Webhook } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

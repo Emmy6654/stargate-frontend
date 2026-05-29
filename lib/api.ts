@@ -1,4 +1,4 @@
-import type { AuthTokens, CreateInvoiceDto, InvoiceListResponse, LoginDto, PublicInvoice, RegisterDto } from '@/types';
+import type { AuthTokens, CreateInvoiceDto, InvoiceListResponse, LoginDto, PublicInvoice, RegisterDto, AuditLogListResponse, BrandingSettings, CurrencyDisplaySettings, ABTest, CreateABTestDto } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 let accessToken: string | null = null;
@@ -97,6 +97,42 @@ export const api = {
       }).then(res => res.json()),
     timeline: (id: string) => request<any[]>(`/disputes/${id}/timeline`),
   },
+  // ─── Multi-currency display ──────────────────────────────────────────────
+  currency: {
+    getSettings: () => request<CurrencyDisplaySettings>('/merchants/me/currency-display'),
+    updateSettings: (dto: Partial<CurrencyDisplaySettings>) =>
+      request<CurrencyDisplaySettings>('/merchants/me/currency-display', { method: 'PATCH', body: JSON.stringify(dto) }),
+  },
+  // ─── Audit log ───────────────────────────────────────────────────────────
+  auditLog: {
+    list: (query = '') => request<AuditLogListResponse>(`/audit-log${query}`),
+    get: (id: string) => request<any>(`/audit-log/${id}`),
+  },
+  // ─── Branding ────────────────────────────────────────────────────────────
+  branding: {
+    get: () => request<BrandingSettings>('/merchants/me/branding'),
+    update: (dto: Partial<BrandingSettings>) =>
+      request<BrandingSettings>('/merchants/me/branding', { method: 'PATCH', body: JSON.stringify(dto) }),
+    uploadLogo: (formData: FormData) =>
+      fetch(`${API_URL}/merchants/me/branding/logo`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+        },
+        body: formData,
+      }).then(res => res.json()),
+  },
+  // ─── A/B tests ───────────────────────────────────────────────────────────
+  abTests: {
+    list: () => request<ABTest[]>('/ab-tests'),
+    get: (id: string) => request<ABTest>(`/ab-tests/${id}`),
+    create: (dto: CreateABTestDto) => request<ABTest>('/ab-tests', { method: 'POST', body: JSON.stringify(dto) }),
+    update: (id: string, dto: Partial<CreateABTestDto>) =>
+      request<ABTest>(`/ab-tests/${id}`, { method: 'PATCH', body: JSON.stringify(dto) }),
+    updateStatus: (id: string, status: ABTest['status']) =>
+      request<ABTest>(`/ab-tests/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+    remove: (id: string) => request(`/ab-tests/${id}`, { method: 'DELETE' }),
   apiKeys: {
     list: () => request<any[]>('/api-keys'),
     create: (dto: any) => request<any>('/api-keys', { method: 'POST', body: JSON.stringify(dto) }),
