@@ -195,6 +195,7 @@ For detailed integration and styling guides, refer to the following documentatio
 - [Widget SDK & Event Schema](docs/widget-sdk.md) — Event schemas (`STARGATE_LOADED`, `STARGATE_PAID`, `STARGATE_ERROR`), `postMessage` details, and embedding code.
 - [Theming & Branding Customisation Guide](docs/theming-and-branding.md) — Complete walkthrough on how to override CSS variables, customize brand colors, support dark mode, and customize fonts for the hosted checkout page.
 - [i18n Contribution Guide](docs/i18n-contribution-guide.md) — Process for adding new languages to the hosted checkout page using next-intl.
+- [Performance Budget](docs/performance-budget.md) — Core Web Vitals targets (LCP, CLS, INP) and how they are measured in CI.
 
 ## License
 
