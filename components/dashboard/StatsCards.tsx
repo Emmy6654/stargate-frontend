@@ -14,9 +14,9 @@ export function StatsCards({ invoices }: { invoices: any[] }) {
     ['This month', `${monthEarnings.toFixed(2)} USDC`],
   ];
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map(([label, value]) => (
-        <Card key={label}>
+        <Card key={label} data-testid="stats-card">
           <div className="text-sm text-slate-500">{label}</div>
           <div className="mt-2 text-2xl font-semibold text-ink">{value}</div>
         </Card>
