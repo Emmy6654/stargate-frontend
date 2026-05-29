@@ -94,6 +94,8 @@ export const handlers = [
       status: invoice.status,
       muxed_address: invoice.muxed_address,
       expires_at: invoice.expires_at,
+      paid_at: invoice.status === 'paid' ? '2024-01-01T01:00:00Z' : undefined,
+      tx_hash: invoice.status === 'paid' ? 'mock_tx_hash_abc123def456' : undefined,
     })
   ),
 

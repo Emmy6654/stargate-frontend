@@ -66,6 +66,8 @@ export interface PublicInvoice {
   status: InvoiceStatus;
   muxed_address: string;
   expires_at: string;
+  paid_at?: string;
+  tx_hash?: string;
 }
 
 export type DisputeStatus = 'open' | 'under_review' | 'resolved' | 'closed' | 'won' | 'lost';
