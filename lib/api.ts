@@ -1,3 +1,4 @@
+import type { AuthTokens, CreateInvoiceDto, InvoiceListResponse, KYCSubmission, LoginDto, PublicInvoice, RegisterDto } from '@/types';
 import type { AuthTokens, CreateInvoiceDto, InvoiceListResponse, LoginDto, PublicInvoice, RegisterDto, AuditLogListResponse, BrandingSettings, CurrencyDisplaySettings, ABTest, CreateABTestDto } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
@@ -23,6 +24,25 @@ async function request<T>(path: string, options: RequestInit = {}, retry = true)
     return response.json();
   } catch (error) {
     if (retry) return request<T>(path, options, false);
+    throw error;
+  }
+}
+
+async function uploadFile<T>(path: string, formData: FormData, retry = true): Promise<T> {
+  try {
+    const response = await fetch(`${API_URL}${path}`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
+      },
+      body: formData,
+    });
+    if (response.status === 401 && typeof window !== 'undefined') window.location.href = '/login';
+    if (!response.ok) throw new Error(await response.text());
+    return response.json();
+  } catch (error) {
+    if (retry) return uploadFile<T>(path, formData, false);
     throw error;
   }
 }
@@ -79,6 +99,16 @@ export const api = {
     conversionFunnel: (period?: string) => request<any>(`/analytics/conversion-funnel${period ? `?period=${period}` : ''}`),
     summaryStats: () => request<any>('/analytics/summary'),
   },
+  kyc: {
+    getSubmission: () => request<KYCSubmission>('/kyc/submission'),
+    uploadDocument: (documentType: string, file: File) => {
+      const formData = new FormData();
+      formData.append('document_type', documentType);
+      formData.append('file', file);
+      return uploadFile<{ id: string; file_name: string }>('/kyc/documents', formData);
+    },
+    removeDocument: (documentId: string) => request(`/kyc/documents/${documentId}`, { method: 'DELETE' }),
+    submitKYC: (documentIds: string[]) => request('/kyc/submit', { method: 'POST', body: JSON.stringify({ document_ids: documentIds }) }),
   developers: {
     rateLimit: () => request<{ used: number; limit: number; reset_at: string }>('/developers/rate-limit'),
   },

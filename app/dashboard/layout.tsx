@@ -1,5 +1,6 @@
 'use client';
 
+import { BarChart3, CreditCard, FileText, KeyRound, LogOut, Search, Settings, ShieldCheck, Users, Wallet, Webhook, FileCheck } from 'lucide-react';
 import { AlertCircle, BarChart3, ClipboardList, CreditCard, FileText, KeyRound, LogOut, Search, Settings, ShieldCheck, Users, Wallet, Webhook } from 'lucide-react';
 import { AlertCircle, BarChart3, CreditCard, FileText, KeyRound, LogOut, Search, Send, Settings, ShieldCheck, Users, Wallet, Webhook } from 'lucide-react';
 import Link from 'next/link';
@@ -27,6 +28,7 @@ const nav = [
   { href: '/dashboard/wallets', label: 'Wallets', icon: Wallet },
   { href: '/dashboard/webhooks', label: 'Webhooks', icon: Webhook },
   { href: '/dashboard/team', label: 'Team', icon: Users },
+  { href: '/dashboard/kyc', label: 'KYC Verification', icon: FileCheck },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
   { href: '/dashboard/developers', label: 'Developers', icon: KeyRound },
 ] as const;

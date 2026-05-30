@@ -68,6 +68,27 @@ export interface PublicInvoice {
   expires_at: string;
 }
 
+export type KYCDocumentType = 'passport' | 'drivers_license' | 'national_id' | 'business_license';
+
+export type KYCSubmissionStatus = 'draft' | 'submitted' | 'approved' | 'rejected' | 'pending_review';
+
+export interface KYCDocument {
+  id: string;
+  document_type: KYCDocumentType;
+  file_name: string;
+  file_size: number;
+  file_url?: string;
+  uploaded_at: string;
+}
+
+export interface KYCSubmission {
+  id: string;
+  merchant_id: string;
+  status: KYCSubmissionStatus;
+  documents: KYCDocument[];
+  submitted_at?: string;
+  reviewed_at?: string;
+  rejection_reason?: string;
 export type DisputeStatus = 'open' | 'under_review' | 'resolved' | 'closed' | 'won' | 'lost';
 export type DisputeReason = 'fraudulent' | 'duplicate' | 'product_not_received' | 'product_unacceptable' | 'other';
 
@@ -232,6 +253,13 @@ export interface ABTest {
   updated_at: string;
 }
 
+export interface UploadDocumentDto {
+  document_type: KYCDocumentType;
+  file: File;
+}
+
+export interface SubmitKYCDto {
+  document_ids: string[];
 export interface CreateABTestDto {
   name: string;
   description?: string;
