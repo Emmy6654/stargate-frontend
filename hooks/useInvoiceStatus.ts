@@ -10,6 +10,28 @@ const MAX_RECONNECTS = 8;
 const BASE_DELAY_MS = 1_000;
 const MAX_DELAY_MS = 30_000;
 
+/**
+ * Hook for real-time invoice status tracking using Server-Sent Events (SSE).
+ *
+ * Establishes a persistent connection to the server to receive real-time updates
+ * about invoice status changes. Automatically reconnects with exponential backoff
+ * if the connection drops, up to a maximum of 8 reconnection attempts.
+ * Closes the connection when the invoice reaches a terminal state (paid, expired, or cancelled).
+ *
+ * @param {string} invoiceId - The invoice ID to track
+ * @returns {Object} Invoice status and connection state
+ * @returns {InvoiceStatus} status - Current invoice status ('pending', 'paid', 'expired', or 'cancelled')
+ * @returns {string | null} paidAt - ISO timestamp when the invoice was paid, or null if not paid
+ * @returns {boolean} loading - Whether the initial status is still being loaded
+ * @returns {string | null} error - Error message if connection failed after max reconnects, or null
+ *
+ * @example
+ * const { status, paidAt, loading, error } = useInvoiceStatus('invoice-123');
+ * if (loading) return <div>Loading status...</div>;
+ * if (error) return <div>Connection lost: {error}</div>;
+ * if (status === 'paid') return <div>Paid at {paidAt}</div>;
+ * return <div>Status: {status}</div>;
+ */
 export function useInvoiceStatus(invoiceId: string) {
   const [status, setStatus] = useState<InvoiceStatus>('pending');
   const [paidAt, setPaidAt] = useState<string | null>(null);
