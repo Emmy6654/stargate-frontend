@@ -20,7 +20,7 @@
     {
       "source": "/pay/(.*)",
       "headers": [
-        { "key": "Content-Security-Policy", "value": "frame-ancestors https://*.stargate.finance" }
+        { "key": "Content-Security-Policy", "value": "frame-ancestors 'self' https://*.stargate.finance" }
       ]
     }
   ],
