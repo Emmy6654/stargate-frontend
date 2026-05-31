@@ -20,7 +20,8 @@ export function PaymentWidget({ invoiceId, onSuccess, onError, theme = 'light' }
   useEffect(() => {
     if (status === 'paid' && invoice) {
       onSuccess?.(invoice);
-      window.parent?.postMessage({ type: 'STARGATE_PAID', invoiceId, txHash: invoice.tx_hash }, '*');
+      const targetOrigin = document.referrer ? new URL(document.referrer).origin : (process.env.NEXT_PUBLIC_APP_URL ?? '*');
+      window.parent?.postMessage({ type: 'STARGATE_PAID', invoiceId, txHash: invoice.tx_hash }, targetOrigin);
     }
   }, [status, invoice, invoiceId, onSuccess]);
 
