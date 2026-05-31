@@ -8,7 +8,7 @@ import { useInvoices } from '@/hooks/useInvoices';
 
 export function InvoicesPageClient() {
   const [status, setStatus] = useState('');
-  const { data } = useInvoices(status ? `?status=${status}` : '');
+  const { data, isLoading, error } = useInvoices(status ? `?status=${status}` : '');
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -20,7 +20,12 @@ export function InvoicesPageClient() {
         </select>
         <Link href="/dashboard/invoices/new"><Button>Create Invoice</Button></Link>
       </div>
-      <InvoiceTable invoices={data?.items ?? []} />
+      <InvoiceTable
+        invoices={data?.items ?? []}
+        loading={isLoading}
+        error={error ? String(error) : null}
+        filtered={!!status}
+      />
     </div>
   );
 }
