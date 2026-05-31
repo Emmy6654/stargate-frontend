@@ -15,7 +15,10 @@ export function useKYC() {
       setSubmission(data);
     } catch (err) {
       setSubmission(null);
-      // If 404 or similar, it's fine - KYC just doesn't exist yet
+      // Only surface non-404 errors — 404 means KYC doesn't exist yet, which is fine
+      if (err instanceof Error && !err.message.includes('404')) {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

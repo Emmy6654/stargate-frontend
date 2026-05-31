@@ -4,3 +4,6 @@ out/
 dist/
 .env.local
 .DS_Store
+vrickish.md
+
+*storybook.log
